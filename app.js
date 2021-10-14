@@ -1,29 +1,22 @@
-const Koa = require("koa");
-const app = new Koa();
-const views = require("koa-views");
-const json = require("koa-json");
-const onerror = require("koa-onerror");
-const bodyparser = require("koa-bodyparser");
-const logger = require("koa-logger");
+const Koa = require("koa"); //koa 包
+const app = new Koa(); //创建 koa 实例
+const views = require("koa-views"); // 视图渲染
+const json = require("koa-json"); //格式化 json
+const onerror = require("koa-onerror"); // 错误处理
+const bodyparser = require("koa-bodyparser"); //针对post请求，解析请求体body
+const logger = require("koa-logger"); //开发阶段日志记录
+const dotenv = require("dotenv"); // 环境变量配置
 
+// 启动Node env环境 先运行
+dotenv.config();
+// 加载路由
+const category = require("./routes/category");
 const index = require("./routes/index");
 const users = require("./routes/users");
 var mysql = require("mysql");
 // error handler  错误处理
 onerror(app);
-// 创建连接池
-var pool = mysql.createPool({
-  connectionLimit: 10, // 连接池最大连接数
-  host: "localhost",
-  user: "root",
-  password: "123456",
-  database: "letao",
-});
 
-pool.query("SELECT 1 + 1 AS solution", function (error, results, fields) {
-  if (error) throw error;
-  console.log("The solution is: ", results[0].solution);
-});
 // middlewares  挂载中间件
 app.use(
   bodyparser({
@@ -50,9 +43,10 @@ app.use(async (ctx, next) => {
 });
 
 // routes 路由
+app.use(category.routes(), category.allowedMethods());
 app.use(index.routes(), index.allowedMethods());
 app.use(users.routes(), users.allowedMethods());
-
+app.use(users.routes(), users.allowedMethods());
 // error-handling 错误处理
 app.on("error", (err, ctx) => {
   console.error("server error", err, ctx);
