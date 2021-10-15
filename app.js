@@ -13,6 +13,7 @@ dotenv.config();
 const category = require("./routes/category");
 const index = require("./routes/index");
 const users = require("./routes/users");
+
 var mysql = require("mysql");
 // error handler  错误处理
 onerror(app);
@@ -46,7 +47,7 @@ app.use(async (ctx, next) => {
 app.use(category.routes(), category.allowedMethods());
 app.use(index.routes(), index.allowedMethods());
 app.use(users.routes(), users.allowedMethods());
-app.use(users.routes(), users.allowedMethods());
+
 // error-handling 错误处理
 app.on("error", (err, ctx) => {
   console.error("server error", err, ctx);

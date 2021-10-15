@@ -1,6 +1,6 @@
 const { query } = require("../db/query");
 
-module.exports.oneCategory = async (id) => {
+module.exports.oneCategory = async () => {
   return await query("select * from category");
 };
 // 获取二级分类
