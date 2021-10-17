@@ -1,12 +1,7 @@
-const crypto = require("crypto");
-
-// 对用户注册成功后的密码进行MD5加密生成密文后返回
-module.exports.cryptoPwd = (pwd) => {
-  return crypto.createHash("MD5").update(pwd).digest("hex");
-};
 // 短信发送功能
 module.exports.sendsms = async (mobile, smscode) => {
-  // console.log(mobile, smscode);
+  // console.log(11111);
+  // console.log(mobile);
   const tencentcloud = require("tencentcloud-sdk-nodejs");
 
   // 导入对应产品模块的client models。
@@ -70,17 +65,4 @@ module.exports.sendsms = async (mobile, smscode) => {
   };
   // 通过client对象调用想要访问的接口，需要传入请求对象以及响应回调函数
   return await client.SendSms(params);
-};
-// 生成指定位数的随机数
-module.exports.getRanddomByLength = (len) => {
-  let code = "";
-  for (let index = 0; index < len; index++) {
-    code += this.getRandom(0, 9);
-  }
-  return code;
-};
-
-// 生成从min 到 max到 随机整数
-module.exports.getRandom = (min, max) => {
-  return Math.floor(Math.random() * (max - min + 1) + min);
 };

@@ -53,8 +53,8 @@ module.exports.register = async (ctx) => {
 module.exports.login = async (ctx) => {
   const { username, password } = ctx.request.body;
   // console.log(ctx.request.body.username, "11");
-  console.log(ctx.request.body.username);
-  console.log(password);
+  // console.log(ctx.request.body.username);
+  // console.log(password);
   const result = await login(username, password);
   console.log(result);
   if (result[0]) {

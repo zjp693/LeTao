@@ -13,10 +13,14 @@ dotenv.config();
 const category = require("./routes/category");
 const index = require("./routes/index");
 const users = require("./routes/users");
-
-var mysql = require("mysql");
+const sms = require("./routes/sms");
+// console.log(sms);
 // error handler  错误处理
 onerror(app);
+
+// app.use((ctx) => {
+//   ctx.body = ctx.request.body;
+// });
 
 // middlewares  挂载中间件
 app.use(
@@ -47,6 +51,7 @@ app.use(async (ctx, next) => {
 app.use(category.routes(), category.allowedMethods());
 app.use(index.routes(), index.allowedMethods());
 app.use(users.routes(), users.allowedMethods());
+app.use(sms.routes(), sms.allowedMethods());
 
 // error-handling 错误处理
 app.on("error", (err, ctx) => {

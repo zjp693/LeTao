@@ -24,7 +24,8 @@
     "koa-views": "^6.2.0",
     "mysql": "^2.18.1",
     "pm2": "^5.1.2",
-    "pug": "^2.0.3"
+    "pug": "^2.0.3",
+    "tencentcloud-sdk-nodejs": "^4.0.218"
   },
   "devDependencies": {
     "nodemon": "^1.19.1"
