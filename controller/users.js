@@ -1,8 +1,10 @@
 // 表单校验
 const Joi = require("joi");
+const jwt = require("jsonwebtoken");
+
 //密码机
 const { cryptoPwd } = require("../utils");
-const { secret } = require("../config");
+const { secret, jwts } = require("../config");
 const { register, findUserByName, login } = require("../model/users");
 const { log } = require("debug");
 
@@ -52,21 +54,18 @@ module.exports.register = async (ctx) => {
 // 用户登录
 module.exports.login = async (ctx) => {
   const { username, password } = ctx.request.body;
-  // console.log(ctx.request.body.username, "11");
-  // console.log(ctx.request.body.username);
-  // console.log(password);
-  const result = await login(username, password);
-  console.log(result);
+
+  // const result = await login(username, password);
+  // 在数据库查询用户信息是否有
+  const result = await login(username, cryptoPwd(password + secret));
+  // console.log(result);
   if (result[0]) {
+    var token = jwt.sign({ username, password }, jwts, { expiresIn: "1h" });
     ctx.body = {
       code: 200,
-      userInfo: {
-        username: result[0].username,
-        mobile: result[0].mobile,
-      },
+      data: { token },
       msg: "登录成功",
     };
   } else {
-    console.log(111);
   }
 };

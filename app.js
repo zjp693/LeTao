@@ -6,7 +6,7 @@ const onerror = require("koa-onerror"); // 错误处理
 const bodyparser = require("koa-bodyparser"); //针对post请求，解析请求体body
 const logger = require("koa-logger"); //开发阶段日志记录
 const dotenv = require("dotenv"); // 环境变量配置
-
+var jwt = require("koa-jwt"); //解密tokenn
 // 启动Node env环境 先运行
 dotenv.config();
 // 加载路由
@@ -14,7 +14,10 @@ const category = require("./routes/category");
 const index = require("./routes/index");
 const users = require("./routes/users");
 const sms = require("./routes/sms");
-// console.log(sms);
+
+//
+const { jwts } = require("./config");
+console.log(jwts);
 // error handler  错误处理
 onerror(app);
 
@@ -44,8 +47,15 @@ app.use(async (ctx, next) => {
   const start = new Date();
   await next();
   const ms = new Date() - start;
-  console.log(`${ctx.method} ${ctx.url} - ${ms}ms`);
+  // console.log(`${ctx.method} ${ctx.url} - ${ms}ms`);
 });
+// 只有在JWT令牌有效的情况下才能到达该行以下的中间件
+// unless 排除不需要再请求带token
+app.use(
+  jwt({ secret: jwts }).unless({
+    path: [/^\/public/, /^\/users\/register/, /^\/users\/login/],
+  })
+);
 
 // routes 路由
 app.use(category.routes(), category.allowedMethods());

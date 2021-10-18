@@ -3,7 +3,7 @@ const { oneCategory, twoCategory } = require("../model/catrgory");
 // 获取一级分类
 module.exports.oneCategory = async (ctx) => {
   // let oneCategory = await query("select * from category");
-  console.log(200);
+
   const result = await oneCategory();
   ctx.body = {
     status: 200,

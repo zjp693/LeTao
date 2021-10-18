@@ -12,7 +12,6 @@ module.exports.findUserByName = async (username) => {
 };
 // 登录
 module.exports.login = async (username, password) => {
-  console.log(password);
   return await query(`select * from user where username = ? and password = ?`, [
     username,
     password,
