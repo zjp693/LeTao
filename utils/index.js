@@ -1,4 +1,9 @@
+const { rejects } = require("assert");
 const crypto = require("crypto");
+const { resolve } = require("path");
+const { key } = require("../config/wx");
+const axios = require("axios");
+const xml = require("xml2js");
 
 // 对用户注册成功后的密码进行MD5加密生成密文后返回
 module.exports.cryptoPwd = (pwd) => {
@@ -84,3 +89,53 @@ module.exports.getRanddomByLength = (len) => {
 module.exports.getRandom = (min, max) => {
   return Math.floor(Math.random() * (max - min + 1) + min);
 };
+// 生成32位以内的随机数
+module.exports.getRanddomStr = () => {
+  return "letao" + new Date().getTime() + this.getRanddomByLength(6);
+};
+
+// 微信下单
+module.exports.createOrder = (url, params) => {
+  return new Promise(async (resolve, reject) => {
+    const data = await axios({
+      url,
+      method: "POST",
+      data: params,
+    });
+    // console.log(data);
+    // resolve(data);
+    xml.parseString(data.data, function (err, res) {
+      const { return_code, result_code, return_msg } = res.xml;
+      if (
+        return_code == "SUCCESS" &&
+        result_code == "SUCCESS" &&
+        return_msg == "OK"
+      ) {
+        resolve(res.xml);
+      } else {
+        reject(res);
+      }
+    });
+  });
+};
+
+// 生成商户订单号
+module.exports.getTrade_no = () => {
+  return this.getRanddomStr() + this.getRanddomByLength(4);
+};
+// 生成签名算法
+module.exports.createSign = (args) => {
+  // 第一步，设所有发送或者接收到的数据为集合M，
+  // 将集合M内非空参数值的参数按照参数名ASCII码从小到大排序（字典序），
+  // 使用URL键值对的格式（即key1=value1&key2=value2…）拼接成字符串stringA。
+  let stringA = Object.keys(args)
+    .sort()
+    .reduce((prev, next) => {
+      return (prev += `${next}=${args[next]}&`);
+    }, "")
+    .concat(`key=${key}`);
+
+  return crypto.createHash("MD5").update(stringA).digest("hex").toUpperCase();
+};
+
+module.exports.aa = () => {};
