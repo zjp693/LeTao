@@ -9,11 +9,12 @@ const {
 
 const { appid, mch_id, notify_url, orderUrl } = require("../config/wx");
 const QRCode = require("qrCode");
+const { query } = require("../db/query");
 // 微信下单
 module.exports.order = async (ctx) => {
   // 前端调用下单需要的参数
   const { body, total_fee, spbill_create_ip, trade_type } = ctx.request.body;
-  console.log(ctx.request);
+
   const params = {
     appid, //公众号id
     mch_id, //商户号
@@ -26,7 +27,7 @@ module.exports.order = async (ctx) => {
     notify_url, // 微信服务器回调的地址
     trade_type, // 支付类型
   };
-
+  // console.log(params);
   // 生成签名
   const sing = createSign(params);
   // console.log(sing);
@@ -47,7 +48,7 @@ module.exports.order = async (ctx) => {
   <sign>${sing}</sign>
 </xml>
 `;
-
+  // console.log(88888888888888888);
   const data = await createOrder(orderUrl, sendData);
   // 下单成功
 
@@ -63,4 +64,36 @@ module.exports.order = async (ctx) => {
     status: 200,
     data,
   };
+};
+
+// 微信下单通知
+module.exports.notify = async (ctx) => {
+  // 打印微信服务器回调你的接口时的请求报文
+  console.log(ctx.request.body.xml);
+  // console.log(11111111111);
+  const {
+    appid,
+    bank_type,
+    cash_fee,
+    fee_type,
+    is_subscribe,
+    mch_id,
+    nonce_str,
+    openid,
+    out_trade_no,
+    sign,
+    time_end,
+    total_fee,
+    trade_type,
+    transaction_id,
+  } = ctx.request.body.xml;
+  // 根据商户订单号查询支付订单表是否存在此订单
+  const data = await query(`select * from payorder where out_trade_no = ?`, [
+    out_trade_no,
+  ]);
+  if (data.length) return; // 退出程序
+  // await query(`insert into playorder (appid, bank_type,cash_fee,fee_type,is_subscribe,mch_id,nonce_str,openid,out_trade_no,sign,time_end,total_fee,trade_type,transaction_id) `)
+  const result = await query(
+    `insert into payorder(appid, bank_type,cash_fee,fee_type,is_subscribe,mch_id,nonce_str,openid,out_trade_no,sign,time_end,total_fee,trade_type,transaction_id) values('${appid}','${bank_type}','${cash_fee}','${fee_type}','${is_subscribe}','${mch_id}','${nonce_str}','${openid}','${out_trade_no}','${sign}','${time_end}','${total_fee}','${trade_type}','${transaction_id}')`
+  );
 };

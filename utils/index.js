@@ -102,8 +102,7 @@ module.exports.createOrder = (url, params) => {
       method: "POST",
       data: params,
     });
-    // console.log(data);
-    // resolve(data);
+    // console.log(data.data);
     xml.parseString(data.data, function (err, res) {
       const { return_code, result_code, return_msg } = res.xml;
       if (
@@ -128,13 +127,14 @@ module.exports.createSign = (args) => {
   // 第一步，设所有发送或者接收到的数据为集合M，
   // 将集合M内非空参数值的参数按照参数名ASCII码从小到大排序（字典序），
   // 使用URL键值对的格式（即key1=value1&key2=value2…）拼接成字符串stringA。
+
   let stringA = Object.keys(args)
     .sort()
     .reduce((prev, next) => {
       return (prev += `${next}=${args[next]}&`);
     }, "")
     .concat(`key=${key}`);
-
+  // console.log(key, "key", stringA);
   return crypto.createHash("MD5").update(stringA).digest("hex").toUpperCase();
 };
 
