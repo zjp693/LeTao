@@ -90,7 +90,7 @@ module.exports.getRandom = (min, max) => {
   return Math.floor(Math.random() * (max - min + 1) + min);
 };
 // 生成32位以内的随机数
-module.exports.getRanddomStr = () => {
+module.exports.getRandomStr = () => {
   return "letao" + new Date().getTime() + this.getRanddomByLength(6);
 };
 
@@ -139,3 +139,27 @@ module.exports.createSign = (args) => {
 };
 
 module.exports.aa = () => {};
+// 微信订单处理    微信下单  订单查询
+module.exports.orderHandle = (url, params) => {
+  return new Promise(async (resolve, reject) => {
+    const data = await axios({
+      url,
+      method: "POST",
+      data: params,
+    });
+    // console.log(data.data, 'data');
+    // resolve(data);
+    xml.parseString(data.data, function (err, res) {
+      const { return_code, result_code, return_msg } = res.xml;
+      if (
+        return_code == "SUCCESS" &&
+        result_code == "SUCCESS" &&
+        return_msg == "OK"
+      ) {
+        resolve(res.xml);
+      } else {
+        reject(res);
+      }
+    });
+  });
+};

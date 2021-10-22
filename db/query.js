@@ -17,7 +17,6 @@ module.exports.query = (sql, value) => {
         if (error) throw error;
         // Don't use the connection here, it has been returned to the pool.
         resolve(results);
-        
       });
     });
   });
