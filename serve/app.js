@@ -8,6 +8,7 @@ const logger = require("koa-logger"); //开发阶段日志记录
 const dotenv = require("dotenv"); // 环境变量配置
 var jwt = require("koa-jwt"); //解密tokenn
 const xmlParser = require("koa-xml-body");
+const cors = require("koa-cors");
 
 const { getRanddomStr, getTrade_no } = require("./utils");
 // console.log(getTrade_no().length);
@@ -32,6 +33,7 @@ onerror(app);
 // });
 
 // middlewares  挂载中间件
+app.use(cors());
 app.use(
   bodyparser({
     enableTypes: ["json", "form", "text"],
