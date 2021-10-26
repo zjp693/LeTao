@@ -17,12 +17,18 @@
 export default {
   //asyncData 刷新页面时，运行在服务器，服务器调用服务端接口不存在跨域
   // 跨域是浏览器端一种安全策略  解决浏览器跨域
-  async asyncData({ $axios }) {
+  async asyncData({ $axios, app: { $api } }) {
     // console.log($axios);
-    const { swipeList } = await $axios.$get("/banners");
-    const { gridList } = await $axios.$get("/gridList");
-    const { sports } = await $axios.$get("/sports");
-    console.log(sports);
+    // const { swipeList } = await $api.$get("/banners");
+    // const { gridList } = await $api.$get("/gridList");
+    // const { sports } = await $api.$get("/sports");
+    // console.log(sports);
+    // 并发请求
+    const [{ swipeList }, { gridList }, { sports }] = await Promise.all([
+      $api.IndexBanners(),
+      $api.IndexGridList(),
+      $api.IndexSport()
+    ]);
     return {
       swipeList,
       gridList,
