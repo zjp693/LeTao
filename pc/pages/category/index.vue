@@ -27,6 +27,8 @@ export default {
     };
   },
   async asyncData({ $api }) {
+    // console.log($route.query);
+    // let active = query.active || 0;
     let active = 0;
     let { oneCategoryList } = await $api.OneCategory();
     // 按照vant 组件对数据的要求，所以我们需要对返回的数据进行加工处理
@@ -51,18 +53,13 @@ export default {
   },
   methods: {
     async hanleList(index) {
-      console.log(index);
+      // console.log(index);
+      // 路由
+      this.$router.replace(`/category?active=${index}`);
+      let id = this.oneCategoryList[index]["id"];
       // 加载二级分类
-      const { twoCategoryList } = await this.$api.TwoCategory(
-        this.oneCategoryList[index]["id"]
-      );
+      const { twoCategoryList } = await this.$api.TwoCategory(id);
       this.twoCategoryList = twoCategoryList;
-      // console.log(
-      //   "twoCategoryList",
-      //   twoCategoryList,
-      //   this.oneCategoryList[index]["id"]
-      //   // this.twoCategoryList
-      // );
     }
   }
 };

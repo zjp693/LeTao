@@ -47,5 +47,6 @@ export default {
     port: 8080
   },
   // Build Configuration: https://go.nuxtjs.dev/config-build
-  build: {}
+  build: {},
+  loading: `~/components/Loading.vue`
 };

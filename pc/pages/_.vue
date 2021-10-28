@@ -1,5 +1,7 @@
 <template>
-  <div>登录页</div>
+  <div>
+    <van-empty description="您访问的页面不存在" />
+  </div>
 </template>
 
 <script>
