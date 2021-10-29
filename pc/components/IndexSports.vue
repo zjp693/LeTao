@@ -19,10 +19,17 @@
 
 <script>
 export default {
-  props:['sports']
-}
+  props: ["sports"],
+  methods: {
+    pay(e, product) {
+      // 阻止表单默认行为
+      e.preventDefault();
+      const { name, price } = product;
+      this.$router.push(`/pay?name=${name}&price=${price}`);
+    }
+  }
+};
 </script>
-
 
 <style scoped>
 .cz_live {

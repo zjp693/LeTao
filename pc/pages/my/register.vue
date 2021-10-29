@@ -73,6 +73,7 @@
 <script>
 import { verify } from "~/utils";
 import { Toast } from "vant";
+import { mapMutations } from "vuex";
 export default {
   data() {
     return {
@@ -80,7 +81,7 @@ export default {
       password: "", //密码
       repeatPassword: "", //确认密码
       mobile: "", //手机号
-
+      timer: null,
       isDisabled: false, //发送短信禁用
       smsBtnText: "发送短信",
       smscode: "", // 保存用户在页面输入的短信验证码
@@ -108,15 +109,16 @@ export default {
       if (this.smscode !== this.smscodeServer) {
         Toast("验证码输入有误");
       }
-      console.log(this.smscode);
-      console.log(this.smscodeServer);
       // 4.调用注册接口
       const { status } = await this.$api.Register(value);
       // console.log(data);
-
+      //销毁定时器
+      this.timer = null;
       if (status == 200) {
         // 注册成功把用户的信息 存在vuex中
         // 跳转登录页面
+        // 存储用户信息到vuex
+        this.updateUserInfo(userInfo);
         this.$router.push("/my/login");
       }
     },
@@ -144,7 +146,7 @@ export default {
       // 保存服务端返回的短信验证码
       this.smscodeServer = code;
 
-      console.log(this.smscodeServer);
+      // console.log(this.smscodeServer);
     }
   }
 };

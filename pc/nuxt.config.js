@@ -43,7 +43,7 @@ export default {
     }
   },
   server: {
-    ip: "http://81.69.190.201", // ip 地址或者域名的配置,
+    ip: "localhost", // ip 地址或者域名的配置,
     port: 8080
   },
   // Build Configuration: https://go.nuxtjs.dev/config-build
