@@ -10,7 +10,9 @@
             <span class="price">¥{{ item.price }}</span
             ><span class="oldPrice">¥{{ item.oldPrice }}</span>
           </p>
-          <button class="button">立即购买</button>
+          <button class="button" @click.prevent="pay($event, item)">
+            立即购买
+          </button>
         </div>
       </a>
     </div>
@@ -22,10 +24,12 @@ export default {
   props: ["sports"],
   methods: {
     pay(e, product) {
+      console.log(product);
       // 阻止表单默认行为
-      e.preventDefault();
+      // e.preventDefault();
       const { name, price } = product;
       this.$router.push(`/pay?name=${name}&price=${price}`);
+      console.log(this.$router.push(`/pay?name=${name}&price=${price}`));
     }
   }
 };

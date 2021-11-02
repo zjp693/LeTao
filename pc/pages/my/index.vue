@@ -16,18 +16,21 @@
 </template>
 
 <script>
+import Cookie from "js-cookie";
 import { mapState, mapMutations } from "vuex";
 export default {
   computed: {
     ...mapState(["userInfo"])
   },
   methods: {
-    ...mapMutations(["updateToken"]),
+    ...mapMutations(["updateToken", "updateUserInfo"]),
     // 退出登录
     logout() {
       // 清除vuex中token
       this.updateToken("");
-
+      this.updateUserInfo("");
+      Cookie.remove("token");
+      Cookie.remove("userInfo");
       // 跳转index
       this.$router.push("/");
     }

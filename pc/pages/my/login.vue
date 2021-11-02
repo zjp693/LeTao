@@ -53,18 +53,19 @@ export default {
         message
       } = await this.$api.Login(values);
       const data = await this.$api.Login(values);
-      console.log(data);
       if (code == 200) {
         // 存储token到vuex
         this.updateToken(token);
         // 存储用户信息到vuex
-        // console.log(username);
         this.updateUserInfo({
           username,
           mobile
         });
         // 存储token到cookie
         Cookie.set("token", token);
+        Cookie.set("userInfo", JSON.stringify({ username, mobile }));
+        // console.log(JSON.stringify({ username, mobile }));
+
         // 到首页
         this.$router.push("/");
       } else {
